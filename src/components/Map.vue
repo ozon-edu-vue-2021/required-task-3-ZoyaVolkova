@@ -1,7 +1,6 @@
 <template>
   <div class="map">
     <h3>Карта офиса</h3>
-
     <div v-if="!isLoading" class="map-root">
       <MapSVG ref="svg" />
       <Table v-show="false" ref="table" />
@@ -22,6 +21,12 @@ export default {
     MapSVG,
     Table,
   },
+  props: {
+    isUserOpenned: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isLoading: false,
@@ -29,6 +34,7 @@ export default {
       g: null,
       tableSVG: null,
       tables: [],
+      tableId: '',
     }
   },
   mounted() {
@@ -37,11 +43,23 @@ export default {
     this.svg = d3.select(this.$refs.svg)
     this.g = this.svg.select('g')
     this.tableSVG = d3.select(this.$refs.table)
+
     if (this.g) {
       this.drawTables()
     } else {
       alert('SVG is incorrect')
     }
+
+    this.$el.querySelectorAll('.employer-place').forEach((table) => {
+      table.addEventListener('click', () => {
+        this.tableId = table.id
+      })
+    })
+    this.$el.addEventListener('click', ($event) => {
+      if ($event.target.className.baseVal !== 'wrapper-table') {
+        this.$emit('update:isUserOpenned', false)
+      }
+    })
 
     this.isLoading = false
   },
@@ -59,7 +77,9 @@ export default {
           .append('g')
           .attr('transform', `translate(${table.x}, ${table.y}) scale(0.5)`)
           .attr('id', table._id)
+
           .classed('employer-place', true)
+
         targetSeat
           .append('g')
           .attr('transform', `rotate(${table.rotate || 0})`)
@@ -72,6 +92,11 @@ export default {
               'transparent'
           )
       })
+    },
+  },
+  watch: {
+    tableId: function () {
+      this.$emit('click', this.tableId)
     },
   },
 }

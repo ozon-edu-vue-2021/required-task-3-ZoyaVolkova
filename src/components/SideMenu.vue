@@ -15,7 +15,7 @@
       <div class="toolbar__actions"></div>
     </div>
     <div class="content">
-      <div v-if="!isUserOpenned" class="legend">
+      <div v-show="!isUserOpenned" class="legend">
         <div class="legend__data">
           <div v-if="legend.length > 0" class="legend__items">
             <Draggable v-model="legend">
@@ -39,10 +39,10 @@
           <PieChart ref="chart" />
         </div>
       </div>
-      <div v-else class="profile">
+      <div v-show="isUserOpenned" class="profile">
         <div v-if="!person" class="profile__empty">Место пустое</div>
 
-        <PersonCard :person="person" />
+        <PersonCard v-else :person="person" />
       </div>
     </div>
   </div>
@@ -55,6 +55,7 @@ import { Doughnut as PieChart } from 'vue-chartjs'
 import Draggable from 'vuedraggable'
 import legend from '@/assets/data/legend.json'
 import { format } from 'date-fns'
+import people from '../assets/data/people.json'
 
 export default {
   props: {
@@ -76,17 +77,20 @@ export default {
   data() {
     return {
       legend: [],
+      people: [],
     }
   },
+
   created() {
     this.loadLegend()
   },
   mounted() {
     this.makeChart()
+    this.people = people
   },
   computed: {
     formatedDate() {
-      return format(new Date(), 'dd.MM.yyyy hh:mm')
+      return format(new Date(), 'dd.MM.yyyy HH:mm')
     },
   },
   methods: {
