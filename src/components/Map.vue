@@ -53,10 +53,11 @@ export default {
     this.$el.querySelectorAll('.employer-place').forEach((table) => {
       table.addEventListener('click', () => {
         this.tableId = table.id
+        this.$emit('click', this.tableId)
       })
     })
     this.$el.addEventListener('click', ($event) => {
-      if ($event.target.className.baseVal !== 'wrapper-table') {
+      if (!$event.target.classList.contains('wrapper-table')) {
         this.$emit('update:isUserOpenned', false)
       }
     })
@@ -92,11 +93,6 @@ export default {
               'transparent'
           )
       })
-    },
-  },
-  watch: {
-    tableId: function () {
-      this.$emit('click', this.tableId)
     },
   },
 }
