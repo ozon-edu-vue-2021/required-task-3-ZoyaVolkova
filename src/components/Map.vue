@@ -1,7 +1,7 @@
 <template>
   <div class="map">
     <h3>Карта офиса</h3>
-    <div v-if="!isLoading" class="map-root">
+    <div v-if="!isLoading" class="map-root" @click="clickHandler">
       <MapSVG ref="svg" />
       <Table v-show="false" ref="table" />
     </div>
@@ -50,24 +50,21 @@ export default {
       alert('SVG is incorrect')
     }
 
-    this.$el.querySelectorAll('.employer-place').forEach((table) => {
-      table.addEventListener('click', () => {
-        this.tableId = table.id
-        this.$emit('click', this.tableId)
-      })
-    })
-    this.$el.addEventListener('click', ($event) => {
-      if (!$event.target.classList.contains('wrapper-table')) {
-        this.$emit('update:isUserOpenned', false)
-      }
-    })
-
     this.isLoading = false
   },
   created() {
     this.tables = tables
   },
   methods: {
+    clickHandler(event) {
+      if (event.target.classList.contains('wrapper-table')) {
+        const id = event.target.closest('.employer-place').id
+        this.tableId = id
+        this.$emit('click', this.tableId)
+      } else {
+        this.$emit('update:isUserOpenned', false)
+      }
+    },
     drawTables() {
       const svgTablesGroupPlace = this.g
         .append('g')

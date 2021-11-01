@@ -5,19 +5,19 @@
     </div>
     <div class="person__info">
       <div class="person__info-name">
-        <b>{{ person.name }} ({{ person.age }})</b>
+        <span class="bold">{{ person.name }} ({{ person.age }})</span>
       </div>
 
       <div class="person__info-email">
-        <b>Почта: </b><br />
+        <span class="bold">Почта: </span><br />
         {{ person.email }}
       </div>
       <div class="person__info-email">
-        <b>Дата регистрации:</b> <br />
+        <span class="bold">Дата регистрации:</span> <br />
         {{ formatedDate }}
       </div>
       <div class="person__info-about">
-        <b>О себе:</b> <br />
+        <span class="bold">О себе:</span> <br />
         {{ person.about }}
       </div>
     </div>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { format } from 'date-fns'
+
 export default {
   props: {
     person: {
@@ -34,7 +36,7 @@ export default {
   },
   computed: {
     formatedDate() {
-      return this.person.registered
+      return format(new Date(this.person.registered), 'dd.MM.yyyy HH:mm')
     },
   },
 }
@@ -64,5 +66,8 @@ export default {
   margin-bottom: 10px;
   color: rgb(20, 82, 216);
   font-size: 22px;
+}
+.bold {
+  font-weight: bold;
 }
 </style>

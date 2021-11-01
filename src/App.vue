@@ -34,12 +34,13 @@ export default {
   },
   methods: {
     getId(id) {
-      const person = people.filter((person) => {
+      const person = people.find((person) => {
         return id == person.tableId
       })
+
       if (person) {
         this.isUserOpenned = true
-        this.person = person[0]
+        this.person = person
       } else {
         this.isUserOpenned = false
         this.person = null
