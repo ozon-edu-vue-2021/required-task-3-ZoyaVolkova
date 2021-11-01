@@ -24,7 +24,7 @@
                 :key="index"
                 :color="item.color"
                 :text="item.text"
-                :counter="item.counter"
+                :counter="countTables(item)"
                 class="legend__item"
               />
             </Draggable>
@@ -56,6 +56,7 @@ import Draggable from 'vuedraggable'
 import legend from '@/assets/data/legend.json'
 import { format } from 'date-fns'
 import people from '../assets/data/people.json'
+import tables from '../assets/data/tables.json'
 
 export default {
   props: {
@@ -94,6 +95,9 @@ export default {
     },
   },
   methods: {
+    countTables(item) {
+      return tables.filter((table) => table.group_id === item.group_id).length
+    },
     loadLegend() {
       this.legend = legend
     },
@@ -106,7 +110,9 @@ export default {
         datasets: [
           {
             backgroundColor: this.legend.map((legendItem) => legendItem.color),
-            data: this.legend.map((legendItem) => legendItem.counter),
+            data: this.legend.map((legendItem) => {
+              return this.countTables(legendItem)
+            }),
           },
         ],
       }
